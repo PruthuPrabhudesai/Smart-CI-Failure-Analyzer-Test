@@ -98,8 +98,7 @@ jobs:
           }
           EOF
 
-          echo "===== REQUEST ====="
-          cat request.json
+
 
           RESPONSE=$(curl -s \
             -X POST \
@@ -109,10 +108,19 @@ jobs:
 
           echo ""
           echo "=========================================="
-          echo "        SMART CI ANALYZER RESULT"
+          echo "      SMART CI FAILURE ANALYZER"
           echo "=========================================="
-
-          echo "$RESPONSE" | jq .
-
           echo ""
+
+          echo "$RESPONSE" | jq -r '
+            .results[] |
+            "Step           : \(.stepName)\n" +
+            "Confidence     : \(.confidence)\n\n" +
+            "Root Cause:\n\(.rootCause)\n\n" +
+            "Recommended Fix:\n\(.solution)\n\n" +
+            "Analysis Source : \(.source)\n"
+          '
+
+          echo "=========================================="
+          echo "      ANALYSIS COMPLETED"
           echo "=========================================="
