@@ -6,6 +6,7 @@ on:
       - main
       - develop
       - feature/**
+
   pull_request:
     branches:
       - main
@@ -13,11 +14,9 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-
       - name: Checkout Repository
         uses: actions/checkout@v4
 
@@ -27,10 +26,79 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restore Dependencies
-        run: dotnet restore Smart-CI-Failure-Analyzer-Test.sln
+        run: |
+          dotnet restore Smart-CI-Failure-Analyzer-Test.sln \
+            2>&1 | tee restore.log
 
       - name: Build Solution
-        run: dotnet build Smart-CI-Failure-Analyzer-Test.sln --configuration Release --no-restore
+        id: build
+        run: |
+          dotnet build Smart-CI-Failure-Analyzer-Test.sln \
+            --configuration Release \
+            --no-restore \
+            2>&1 | tee build.log
 
       - name: Run Unit Tests
-        run: dotnet test Smart-CI-Failure-Analyzer-Test.sln --configuration Release --no-build --verbosity normal
+        id: tests
+        run: |
+          dotnet test Smart-CI-Failure-Analyzer-Test.sln \
+            --configuration Release \
+            --no-build \
+            --verbosity normal \
+            2>&1 | tee test.log
+
+      - name: Upload Logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-logs
+          path: |
+            restore.log
+            build.log
+            test.log
+
+      - name: Analyze Pipeline Failure
+        if: failure()
+        run: |
+          echo "Pipeline failed. Sending logs to Smart CI Analyzer..."
+
+          LOG_CONTENT=$(cat restore.log build.log test.log 2>/dev/null | tail -100)
+
+          JSON_LOGS=$(printf '%s\n' "$LOG_CONTENT" | jq -R . | jq -s .)
+
+          cat > request.json <<EOF
+          {
+            "pipelineId": "${{ github.run_id }}",
+            "failedSteps": [
+              {
+                "stepName": "Build/Test",
+                "logs": $JSON_LOGS
+              }
+            ]
+          }
+          EOF
+
+          echo "===== REQUEST ====="
+          cat request.json
+
+          RESPONSE=$(curl -s \
+            -X POST \
+            https://smart-ci-analyzer.onrender.com/api/v1/analyze \
+            -H "Content-Type: application/json" \
+            -d @request.json)
+
+          echo ""
+          echo "=========================================="
+          echo "        SMART CI ANALYZER RESULT"
+          echo "=========================================="
+
+          echo "$RESPONSE" | jq .
+
+          echo ""
+          echo "=========================================="
+
+      - name: Pipeline Summary
+        if: failure()
+        run: |
+          echo "Build or test execution failed."
+          echo "Smart CI Analyzer has been invoked."
