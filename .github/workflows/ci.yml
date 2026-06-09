@@ -26,21 +26,28 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restore Dependencies
+        shell: bash
         run: |
+          set -o pipefail
+
           dotnet restore Smart-CI-Failure-Analyzer-Test.sln \
             2>&1 | tee restore.log
 
       - name: Build Solution
-        id: build
+        shell: bash
         run: |
+          set -o pipefail
+
           dotnet build Smart-CI-Failure-Analyzer-Test.sln \
             --configuration Release \
             --no-restore \
             2>&1 | tee build.log
 
       - name: Run Unit Tests
-        id: tests
+        shell: bash
         run: |
+          set -o pipefail
+
           dotnet test Smart-CI-Failure-Analyzer-Test.sln \
             --configuration Release \
             --no-build \
@@ -57,12 +64,25 @@ jobs:
             build.log
             test.log
 
-      - name: Analyze Pipeline Failure
-        if: failure()
-        run: |
-          echo "Pipeline failed. Sending logs to Smart CI Analyzer..."
+  analyze-failure:
+    runs-on: ubuntu-latest
 
-          LOG_CONTENT=$(cat restore.log build.log test.log 2>/dev/null | tail -100)
+    needs: build
+
+    if: failure()
+
+    steps:
+      - name: Download Logs
+        uses: actions/download-artifact@v4
+        with:
+          name: pipeline-logs
+
+      - name: Invoke Smart CI Analyzer
+        shell: bash
+        run: |
+          echo "Pipeline failed. Invoking Smart CI Analyzer..."
+
+          LOG_CONTENT=$(cat *.log 2>/dev/null | tail -100)
 
           JSON_LOGS=$(printf '%s\n' "$LOG_CONTENT" | jq -R . | jq -s .)
 
@@ -96,9 +116,3 @@ jobs:
 
           echo ""
           echo "=========================================="
-
-      - name: Pipeline Summary
-        if: failure()
-        run: |
-          echo "Build or test execution failed."
-          echo "Smart CI Analyzer has been invoked."
