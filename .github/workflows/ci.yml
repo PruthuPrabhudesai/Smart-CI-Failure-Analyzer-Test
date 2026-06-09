@@ -114,11 +114,16 @@ jobs:
 
           echo "$RESPONSE" | jq -r '
             .results[] |
-            "Step           : \(.stepName)\n" +
-            "Confidence     : \(.confidence)\n\n" +
-            "Root Cause:\n\(.rootCause)\n\n" +
-            "Recommended Fix:\n\(.solution)\n\n" +
-            "Analysis Source : \(.source)\n"
+            "Step           : \(.stepName)",
+            "Confidence     : \(.confidence)",
+            "",
+            "Root Cause:",
+            (.rootCause),
+            "",
+            "Recommended Fix:",
+            (.solution),
+            "",
+            "Analysis Source : \(.source)"
           '
 
           echo "=========================================="
