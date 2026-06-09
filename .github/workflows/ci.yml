@@ -1,0 +1,36 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - feature/**
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore Dependencies
+        run: dotnet restore Smart-CI-Failure-Analyzer-Test.sln
+
+      - name: Build Solution
+        run: dotnet build Smart-CI-Failure-Analyzer-Test.sln --configuration Release --no-restore
+
+      - name: Run Unit Tests
+        run: dotnet test Smart-CI-Failure-Analyzer-Test.sln --configuration Release --no-build --verbosity normal
