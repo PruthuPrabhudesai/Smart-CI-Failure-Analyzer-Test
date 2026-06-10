@@ -8,12 +8,12 @@ namespace Smart_CI_Failure_Analyzer_Test.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController1(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(testDate)
         {
             return View();
         }
