@@ -13,9 +13,9 @@ namespace Smart_CI_Failure_Analyzer_Test.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index(testDate)
+        public IActionResult Index()
         {
-            return View();
+            return View(testDate);
         }
         
         public IActionResult Privacy()
