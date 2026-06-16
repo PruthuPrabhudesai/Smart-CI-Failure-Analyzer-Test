@@ -2,8 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Smart_CI_Failure_Analyzer_Test.Models;
 
-namespace Smart_CI_Failure_Analyzer_Test.Controllers 
-
+namespace Smart_CI_Failure_Analyzer_Test.Controllers
 {
     public class HomeController : Controller
     {
