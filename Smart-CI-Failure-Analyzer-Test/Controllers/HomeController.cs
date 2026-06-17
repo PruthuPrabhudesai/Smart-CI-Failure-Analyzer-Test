@@ -19,7 +19,7 @@ namespace Smart_CI_Failure_Analyzer_Test.Controllers
             return View();
         }
         public IActionResult Test()
-        {
+        { 
         }
         public IActionResult Privacy()
         {
