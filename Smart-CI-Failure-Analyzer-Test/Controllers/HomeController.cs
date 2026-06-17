@@ -4,7 +4,7 @@ using Smart_CI_Failure_Analyzer_Test.Models;
 
 namespace Smart_CI_Failure_Analyzer_Test.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : Controller 
     {
         private readonly ILogger<HomeController> _logger;
 
