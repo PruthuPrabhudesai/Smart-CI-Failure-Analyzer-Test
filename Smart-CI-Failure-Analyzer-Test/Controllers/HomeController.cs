@@ -16,16 +16,32 @@ namespace Smart_CI_Failure_Analyzer_Test.Controllers
         public IActionResult Index()
         {
 
-            return View();
+            return View(add);
         }
-        //public IActionResult Test()
-        //{ 
+
+        //public IActionResult Privacy()
+        //{
+        //    NotExistingMethod();
+        //    return View();
         //}
         public IActionResult Privacy()
         {
-            return "Privacy";
+            return View();
         }
-        
+
+        //public IActionResult Privacy()
+        //{
+        //    var model = new ErrorViewModel();
+        //    model.InvalidProperty = "Test";
+        //    return View();
+        //}
+
+        //public IActionResult Privacy()
+        //{
+        //    var model = new ErrorViewModel("test");
+        //    return View();
+        //}
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
