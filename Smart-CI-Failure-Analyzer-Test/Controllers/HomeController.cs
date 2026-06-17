@@ -16,14 +16,14 @@ namespace Smart_CI_Failure_Analyzer_Test.Controllers
         public IActionResult Index()
         {
 
-            return View(test);
+            return View();
         }
         //public IActionResult Test()
         //{ 
         //}
         public IActionResult Privacy()
         {
-            return View();
+            return "Privacy";
         }
         
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
