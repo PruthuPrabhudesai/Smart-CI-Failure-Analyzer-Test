@@ -29,12 +29,12 @@ namespace Smart_CI_Failure_Analyzer_Test.Controllers
         //    return View();
         //}
 
-        public IActionResult Privacy()
-        {
-            var model = new ErrorViewModel();
-            model.InvalidProperty = "Test";
-            return View();
-        }
+        //public IActionResult Privacy()
+        //{
+        //    var model = new ErrorViewModel();
+        //    model.InvalidProperty = "Test";
+        //    return View();
+        //}
 
         //public IActionResult Privacy()
         //{
