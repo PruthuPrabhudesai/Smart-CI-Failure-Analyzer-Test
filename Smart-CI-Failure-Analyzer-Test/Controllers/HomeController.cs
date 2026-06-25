@@ -16,7 +16,7 @@ namespace Smart_CI_Failure_Analyzer_Test.Controllers
         public IActionResult Index()
         {
 
-            return View(add);
+            return View(add); 
         }
 
         //public IActionResult Privacy()
