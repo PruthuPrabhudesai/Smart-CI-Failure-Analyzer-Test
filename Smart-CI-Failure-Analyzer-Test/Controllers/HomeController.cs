@@ -13,12 +13,12 @@ namespace Smart_CI_Failure_Analyzer_Test.Controllers
             _logger = logger;
         }
 
-        public IActionResult Index()
-        {
+        //public IActionResult Index()
+        //{
 
-            return View(add_new_test_demo);   
-        }
-         
+        //    return View(add_new_test_demo);   
+        //}
+
         //public IActionResult Privacy()
         //{
         //    NotExistingMethod();
@@ -36,11 +36,11 @@ namespace Smart_CI_Failure_Analyzer_Test.Controllers
         //    return View();
         //}
 
-        //public IActionResult Privacy()
-        //{
-        //    var model = new ErrorViewModel("test");
-        //    return View();
-        //}
+        public IActionResult Privacy()
+        {
+            var model = new ErrorViewModel("test");
+            return View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
